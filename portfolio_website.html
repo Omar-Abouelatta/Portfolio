@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Omar Abouelatta — Computer Engineer</title>
+  <meta name="description" content="Computer Engineer specializing in ML, embedded systems, and robotics. Based in Montreal."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #f0e8d0;
+      --bg-card:     #e6d9ba;
+      --bg-card-h:   #dccfa8;
+      --text:        #1a1408;
+      --text-2:      #6b4e35;
+      --text-3:      #a08868;
+      --red:         #a02818;
+      --amber:       #b06418;
+      --gold:        #c08018;
+      --green:       #4a6030;
+      --green-2:     #6a8848;
+      --border:      rgba(80,60,20,0.14);
+      --border-h:    rgba(80,60,20,0.32);
+      --glow:        rgba(160,100,20,0.07);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Lora', Georgia, serif;
+      font-size: 16px;
+      line-height: 1.8;
+      overflow-x: hidden;
+    }
+
+    /* grain overlay */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.028;
+      pointer-events: none;
+      z-index: 9998;
+      mix-blend-mode: multiply;
+    }
+
+    /* ── NAV ─────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 200;
+      padding: 1.4rem 3.5rem;
+      display: flex; justify-content: space-between; align-items: center;
+      background: linear-gradient(to bottom, rgba(240,232,208,0.97) 0%, transparent 100%);
+    }
+
+    .nav-mark {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem; font-weight: 600;
+      letter-spacing: 0.12em; color: var(--gold);
+      text-decoration: none;
+    }
+
+    .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+    .nav-links a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--text-3); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--green); }
+
+    /* ── HERO ────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 6rem 3.5rem 4rem;
+      position: relative; overflow: hidden;
+    }
+
+    /* warm ember glow behind the text */
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: 30%; left: -10%;
+      width: 70vw; height: 70vh;
+      background: radial-gradient(ellipse at center, rgba(180,80,30,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    #leafCanvas {
+      position: absolute; inset: 0;
+      pointer-events: none; z-index: 1;
+    }
+
+    .hero-content {
+      position: relative; z-index: 2;
+      max-width: 760px;
+    }
+
+    .hero-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--amber); margin-bottom: 1.8rem;
+      display: flex; align-items: center; gap: 0.8rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block; width: 24px; height: 1px;
+      background: var(--amber);
+    }
+
+    .hero-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.8rem, 9vw, 7.5rem);
+      font-weight: 300; line-height: 1.0;
+      letter-spacing: -0.025em;
+      color: var(--text); margin-bottom: 0.15em;
+    }
+    .hero-name .given { display: block; }
+    .hero-name .family {
+      display: block; font-style: italic;
+      color: var(--green); font-weight: 300;
+    }
+
+    .hero-role {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+      font-weight: 400; font-style: italic;
+      color: var(--text-2); margin: 1.2rem 0 2rem;
+    }
+
+    .hero-desc {
+      font-size: 0.9rem; color: var(--text-2);
+      max-width: 480px; line-height: 1.85; margin-bottom: 3rem;
+    }
+
+    .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
+      text-decoration: none; display: inline-block;
+      padding: 0.75rem 1.6rem;
+      border: 1px solid var(--border-h);
+      color: var(--text-2);
+      transition: all 0.25s; cursor: pointer; background: transparent;
+    }
+    .btn:hover {
+      background: var(--glow); color: var(--text);
+      border-color: rgba(180,130,50,0.45);
+    }
+    .btn-red {
+      border-color: rgba(184,56,40,0.5);
+      color: #d9907e;
+    }
+    .btn-red:hover {
+      background: rgba(184,56,40,0.12);
+      border-color: rgba(184,56,40,0.8);
+      color: #f0b8ae;
+    }
+
+    /* scroll hint */
+    .scroll-hint {
+      position: absolute; bottom: 2.5rem; left: 3.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--green-2);
+      display: flex; align-items: center; gap: 0.7rem;
+      animation: bob 2.5s ease-in-out infinite;
+    }
+    .scroll-hint::after {
+      content: '';
+      display: block; width: 1px; height: 28px;
+      background: linear-gradient(to bottom, var(--text-3), transparent);
+    }
+    @keyframes bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(4px); }
+    }
+
+    /* ── SECTION SHARED ──────────────────────────── */
+    .sec-wrap {
+      padding: 7rem 3.5rem;
+      max-width: 1080px; margin: 0 auto;
+    }
+
+    .sec-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.26em; text-transform: uppercase;
+      color: var(--amber); margin-bottom: 0.6rem;
+    }
+
+    .sec-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 400; color: var(--text);
+      margin-bottom: 3.5rem; line-height: 1.15;
+    }
+
+    hr.rule {
+      border: none; border-top: 1px solid var(--border);
+      max-width: 1080px; margin: 0 auto;
+    }
+
+    /* ── EXPERIENCE ──────────────────────────────── */
+    .exp-item {
+      display: grid;
+      grid-template-columns: 190px 1fr;
+      gap: 2.5rem;
+      padding-bottom: 3.5rem; margin-bottom: 3.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .exp-item:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+
+    .exp-company {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem; letter-spacing: 0.08em;
+      color: var(--amber); margin-bottom: 0.4rem;
+    }
+    .exp-period {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem; color: var(--text-3);
+    }
+    .exp-role {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.45rem; font-weight: 600;
+      color: var(--text); margin-bottom: 1.1rem;
+    }
+    .exp-bullets { list-style: none; }
+    .exp-bullets li {
+      font-size: 0.875rem; color: var(--text-2);
+      line-height: 1.75; margin-bottom: 0.5rem;
+      padding-left: 1.4rem; position: relative;
+    }
+    .exp-bullets li::before {
+      content: '–'; position: absolute; left: 0;
+      color: var(--text-3);
+    }
+
+    /* ── PROJECTS ────────────────────────────────── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .pcard {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 2rem 1.8rem 1.8rem;
+      position: relative; overflow: hidden;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .pcard::after {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, var(--red), var(--amber), transparent);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .pcard:hover { background: var(--bg-card-h); border-color: var(--border-h); }
+    .pcard:hover::after { opacity: 1; }
+
+    .pcard-year {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 0.8rem;
+    }
+    .pcard-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.55rem; font-weight: 600; color: var(--text);
+      margin-bottom: 0.2rem;
+    }
+    .pcard-sub {
+      font-size: 0.78rem; color: var(--text-3);
+      font-style: italic; margin-bottom: 1.1rem;
+    }
+    .pcard-desc {
+      font-size: 0.85rem; color: var(--text-2);
+      line-height: 1.75;
+    }
+    .pcard-stack {
+      display: flex; flex-wrap: wrap; gap: 0.4rem;
+      margin-top: 1.5rem;
+    }
+    .tech {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem; letter-spacing: 0.07em;
+      color: var(--text-3); border: 1px solid var(--border);
+      padding: 0.22rem 0.55rem;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .pcard:hover .tech { color: var(--text-2); border-color: var(--border-h); }
+
+    /* ── SKILLS ──────────────────────────────────── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 3rem 2.5rem;
+    }
+
+    .sg-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--amber); margin-bottom: 1rem;
+    }
+    .sg-pills { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+    .pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem; color: var(--text-2);
+      background: var(--bg-card); border: 1px solid var(--border);
+      padding: 0.32rem 0.8rem;
+      transition: all 0.2s; cursor: default;
+    }
+    .pill:hover {
+      color: var(--green); border-color: var(--green-2);
+      background: var(--bg-card-h);
+    }
+
+    /* ── EDUCATION ───────────────────────────────── */
+    .edu-block {
+      border-left: 2px solid var(--green);
+      padding-left: 2rem;
+      max-width: 600px;
+    }
+    .edu-uni {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem; font-weight: 600; color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+    .edu-degree { font-size: 0.9rem; color: var(--text-2); margin-bottom: 0.7rem; }
+    .edu-note {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem; color: var(--text-3); line-height: 1.6;
+    }
+
+    /* ── FOOTER ──────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 3.5rem;
+      max-width: 1080px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-id {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem; color: var(--text-3);
+    }
+    .footer-links { display: flex; gap: 2rem; }
+    .footer-links a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.1em;
+      color: var(--text-3); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--green); }
+
+    /* ── REVEAL ──────────────────────────────────── */
+    .rv {
+      opacity: 0; transform: translateY(18px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .rv.in { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ──────────────────────────────── */
+    @media (max-width: 700px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.2rem; }
+      #hero { padding: 5rem 1.5rem 3rem; }
+      .scroll-hint { left: 1.5rem; }
+      .sec-wrap { padding: 4.5rem 1.5rem; }
+      .exp-item { grid-template-columns: 1fr; gap: 0.4rem; }
+      footer { flex-direction: column; gap: 1.2rem; text-align: center; padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#hero" class="nav-mark">O·A</a>
+    <ul class="nav-links">
+      <li><a href="#experience">Work</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#education">Education</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <canvas id="leafCanvas"></canvas>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Computer Engineer · Montreal</p>
+      <h1 class="hero-name">
+        <span class="given">Omar</span>
+        <span class="family">Abouelatta</span>
+      </h1>
+      <p class="hero-role">Machine Learning &nbsp;·&nbsp; Embedded Systems &nbsp;·&nbsp; Robotics</p>
+      <p class="hero-desc">
+        Fifth-year Computer Engineering student at Concordia University. 
+        I build things that run close to the metal and think in the cloud — 
+        from throttleable rocket engine control systems to production ML pipelines.
+      </p>
+      <div class="hero-cta">
+        <a href="mailto:omar.abouelatta@email.com" class="btn btn-red">Get in touch</a>
+        <a href="https://linkedin.com/in/omar-abouelatta" target="_blank" class="btn">LinkedIn ↗</a>
+        <a href="https://github.com/omar-abouelatta" target="_blank" class="btn">GitHub ↗</a>
+      </div>
+    </div>
+    <p class="scroll-hint">Scroll</p>
+  </section>
+
+  <hr class="rule"/>
+
+  <!-- EXPERIENCE -->
+  <div class="sec-wrap" id="experience">
+    <p class="sec-label rv">Professional</p>
+    <h2 class="sec-title rv">Work Experience</h2>
+
+    <div class="exp-item rv">
+      <div>
+        <p class="exp-company">Bombardier</p>
+        <p class="exp-period">Jan – May 2025</p>
+      </div>
+      <div>
+        <h3 class="exp-role">Machine Learning Engineer</h3>
+        <ul class="exp-bullets">
+          <li>Rebuilt a legacy airspeed prediction model from proprietary tooling to a modern PyTorch MLP pipeline, processing data from 36 sensors across 48 flight validation runs.</li>
+          <li>Engineered the full data pipeline — cleaning, outlier removal, feature importance analysis — eliminating non-critical sensors without sacrificing accuracy.</li>
+          <li>Achieved a 30% accuracy improvement through architecture refinement (23%) and sensor pruning (7%).</li>
+          <li>Cut training time from ~1 day to 10 minutes; validation from ~10 hours to 4 minutes.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exp-item rv">
+      <div>
+        <p class="exp-company">HackConcordia</p>
+        <p class="exp-period">2024 – 2025</p>
+      </div>
+      <div>
+        <h3 class="exp-role">Technology Director</h3>
+        <ul class="exp-bullets">
+          <li>Led development of the HackConcordia and ConUHacks websites, delivering seamless registration for 800+ participants at Quebec's largest hackathon.</li>
+          <li>Architected and maintained the end-to-end registration pipeline, scaling reliably to peak event demand.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <hr class="rule"/>
+
+  <!-- PROJECTS -->
+  <div class="sec-wrap" id="projects">
+    <p class="sec-label rv">Selected</p>
+    <h2 class="sec-title rv">Projects</h2>
+
+    <div class="projects-grid">
+      <div class="pcard rv">
+        <p class="pcard-year">Capstone · 2025–2026</p>
+        <h3 class="pcard-name">Project TERRA</h3>
+        <p class="pcard-sub">Throttleable Engine for Rocketry Research Applications</p>
+        <p class="pcard-desc">
+          Dual-controller avionics separating deterministic actuator control (STM32H753ZI) from high-precision data acquisition (LabJack T7). 
+          Firmware in C/HAL driving 6 solenoid valves and 2 steppers with trapezoidal velocity profiling.
+          14-channel ADC signal conditioning at up to 14 kHz with a full PyQt6 HMI and HDF5 logging.
+        </p>
+        <div class="pcard-stack">
+          <span class="tech">STM32H753ZI</span>
+          <span class="tech">C / HAL</span>
+          <span class="tech">PyQt6</span>
+          <span class="tech">HDF5</span>
+          <span class="tech">LabJack T7</span>
+          <span class="tech">INA125P</span>
+          <span class="tech">UART</span>
+        </div>
+      </div>
+
+      <div class="pcard rv">
+        <p class="pcard-year">ML · Summer 2024</p>
+        <h3 class="pcard-name">MoodMapper AI</h3>
+        <p class="pcard-sub">CNN Image Classifier</p>
+        <p class="pcard-desc">
+          Facial expression classifier built with PyTorch. 
+          K-fold cross-validation and bias testing used throughout to ensure robust, equitable performance across diverse emotional cues.
+        </p>
+        <div class="pcard-stack">
+          <span class="tech">PyTorch</span>
+          <span class="tech">CNN</span>
+          <span class="tech">K-Fold CV</span>
+          <span class="tech">Python</span>
+        </div>
+      </div>
+
+      <div class="pcard rv">
+        <p class="pcard-year">Android · Fall 2023 · 2nd Place</p>
+        <h3 class="pcard-name">PostureFit</h3>
+        <p class="pcard-sub">Real-time Posture Monitoring</p>
+        <p class="pcard-desc">
+          Android app using a Raspberry Pi–connected camera for live posture analysis. 
+          Google MediaPipe for pose detection, Firebase Realtime Database for instant feedback, 
+          local IP streaming and SQLite to keep data fully on-device.
+        </p>
+        <div class="pcard-stack">
+          <span class="tech">Android</span>
+          <span class="tech">MediaPipe</span>
+          <span class="tech">Firebase</span>
+          <span class="tech">Raspberry Pi</span>
+          <span class="tech">SQLite</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="rule"/>
+
+  <!-- SKILLS -->
+  <div class="sec-wrap" id="skills">
+    <p class="sec-label rv">Technical</p>
+    <h2 class="sec-title rv">Skills</h2>
+
+    <div class="skills-grid">
+      <div class="rv">
+        <p class="sg-label">Languages</p>
+        <div class="sg-pills">
+          <span class="pill">Python</span>
+          <span class="pill">C / C++</span>
+          <span class="pill">Java</span>
+          <span class="pill">JavaScript</span>
+          <span class="pill">VHDL</span>
+          <span class="pill">Verilog</span>
+        </div>
+      </div>
+      <div class="rv">
+        <p class="sg-label">ML & Data</p>
+        <div class="sg-pills">
+          <span class="pill">PyTorch</span>
+          <span class="pill">scikit-learn</span>
+          <span class="pill">NumPy</span>
+          <span class="pill">Pandas</span>
+          <span class="pill">HDF5</span>
+        </div>
+      </div>
+      <div class="rv">
+        <p class="sg-label">Embedded & Hardware</p>
+        <div class="sg-pills">
+          <span class="pill">STM32 / HAL</span>
+          <span class="pill">LabJack T7</span>
+          <span class="pill">UART / SPI / I²C</span>
+          <span class="pill">PWM / Timers</span>
+          <span class="pill">KiCad</span>
+          <span class="pill">Arduino</span>
+        </div>
+      </div>
+      <div class="rv">
+        <p class="sg-label">Web & Tools</p>
+        <div class="sg-pills">
+          <span class="pill">React.js</span>
+          <span class="pill">PyQt6</span>
+          <span class="pill">Firebase</span>
+          <span class="pill">Git</span>
+          <span class="pill">Android Studio</span>
+          <span class="pill">SQL</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="rule"/>
+
+  <!-- EDUCATION -->
+  <div class="sec-wrap" id="education">
+    <p class="sec-label rv">Academic</p>
+    <h2 class="sec-title rv">Education</h2>
+
+    <div class="edu-block rv">
+      <h3 class="edu-uni">Concordia University</h3>
+      <p class="edu-degree">Bachelor of Computer Engineering &nbsp;·&nbsp; Montreal, Canada &nbsp;·&nbsp; 2021–2026</p>
+      <p class="edu-note">
+        Fifth year &nbsp;·&nbsp; Institute for Co-operative Education<br/>
+        2nd Place — Best Mini Capstone Projects, Fall 2023
+      </p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-id">Omar Abouelatta</span>
+    <div class="footer-links">
+      <a href="mailto:omar.abouelatta@email.com">Email</a>
+      <a href="https://linkedin.com/in/omar-abouelatta" target="_blank">LinkedIn</a>
+      <a href="https://github.com/omar-abouelatta" target="_blank">GitHub</a>
+    </div>
+  </footer>
+
+  <script>
+    /* ── LEAF CANVAS ─────────────────────────────── */
+    const canvas = document.getElementById('leafCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resize() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const PALETTE = [
+      '#b83020','#c84828','#d06020','#c07018',
+      '#8a1c10','#d89020','#4a6030','#5a7838',
+      '#a02010','#3d5428'
+    ];
+
+    function leaf(ctx, x, y, r, rot, alpha) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(rot);
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = r;
+      ctx.beginPath();
+      // simple 5-point maple silhouette
+      ctx.moveTo(0, -10);
+      ctx.bezierCurveTo( 5, -8,  12, -4,  9,  2);
+      ctx.bezierCurveTo(14,  0,  14,  6,  9,  7);
+      ctx.bezierCurveTo(10, 12,  5, 14,  0,  10);
+      ctx.bezierCurveTo(-5, 14, -10, 12, -9,  7);
+      ctx.bezierCurveTo(-14,  6, -14,  0, -9,  2);
+      ctx.bezierCurveTo(-12, -4, -5, -8,  0, -10);
+      ctx.fill();
+      // stem
+      ctx.strokeStyle = r;
+      ctx.globalAlpha = alpha * 0.55;
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(0, 10); ctx.lineTo(0, 17);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    const N = 22;
+    const leaves = Array.from({length: N}, () => ({
+      x:    Math.random() * window.innerWidth,
+      y:    Math.random() * -window.innerHeight * 1.2,
+      sz:   0.6 + Math.random() * 1.1,
+      rot:  Math.random() * Math.PI * 2,
+      dr:   (Math.random() - 0.5) * 0.025,
+      vx:   (Math.random() - 0.5) * 0.6,
+      vy:   0.45 + Math.random() * 0.9,
+      sw:   Math.random() * Math.PI * 2,
+      swS:  0.007 + Math.random() * 0.013,
+      col:  PALETTE[Math.floor(Math.random() * PALETTE.length)],
+      a:    0.18 + Math.random() * 0.22,
+    }));
+
+    function frame() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const H = canvas.height, W = canvas.width;
+      leaves.forEach(l => {
+        l.sw  += l.swS;
+        l.x   += l.vx + Math.sin(l.sw) * 0.55;
+        l.y   += l.vy;
+        l.rot += l.dr;
+        if (l.y > H + 30) { l.y = -20; l.x = Math.random() * W; }
+        ctx.save();
+        ctx.scale(l.sz, l.sz);
+        leaf(ctx, l.x / l.sz, l.y / l.sz, l.col, l.rot, l.a);
+        ctx.restore();
+      });
+      requestAnimationFrame(frame);
+    }
+    frame();
+
+    /* ── SCROLL REVEAL ───────────────────────────── */
+    const els = document.querySelectorAll('.rv');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('in'), i * 70);
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    els.forEach(el => io.observe(el));
+  </script>
+</body>
+</html>
